@@ -1,8 +1,7 @@
-package com.example.testsystemapi.repository;
+package com.example.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.example.testsystemapi.model.User;
+import com.example.model.User;
 
 public interface UserRepository extends JpaRepository<User, Integer>{
 

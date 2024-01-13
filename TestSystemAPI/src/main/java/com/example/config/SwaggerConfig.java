@@ -1,4 +1,4 @@
-package com.example.testsystemapi.config;
+package com.example.config;
 
 //import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 //@EnableSwagger2
-@EnableWebMvc
+//@EnableWebMvc
 public class SwaggerConfig implements WebMvcConfigurer{
     
     @Bean
@@ -32,7 +32,9 @@ public class SwaggerConfig implements WebMvcConfigurer{
                 .apis(RequestHandlerSelectors.basePackage("com.example.testsystemapi.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .apiInfo(metaInfo());
+                .apiInfo(metaInfo())
+                .host("http://localhost:8080")
+;
     }
 
     private ApiInfo metaInfo() {
