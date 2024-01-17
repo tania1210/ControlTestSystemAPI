@@ -1,42 +1,50 @@
 package com.example.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.model.User;
+import com.example.model.WebResponse;
 import com.example.service.UserService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
 @RestController
-@Api(tags = "Main Controller")
 public class MainController {
 
-	@Autowired
-	private UserService userService;
-	
+//	@PostMapping("/signIn")
+//	public ResponseEntity<?> signIn(@RequestBody LoginRequest request) {
+//		return new ResponseEntity<>(
+//				new WebResponse(
+//						HttpStatus.OK.value(),
+//						HttpStatus.OK.getReasonPhrase(),
+//						"Successfuly signed in!"
+//				), HttpStatus.OK
+//		);
+//	}
+//	@Autowired
+//	private UserService userService;
+//	
     @GetMapping("/")
-    @ApiOperation("Get home page message")
     public String viewHomePage() {
         return "Home page";
     }
 
     @PostMapping("/login")
-    @ApiOperation("Authentication")
-    public String authenticateUser( User user) {
-        System.out.println(user);
-        return "User is authentication!";
+    public String login() {
+        return "login";
     }
     
     @PostMapping("/register")
-    @ApiOperation("Create new user")
-    public String createUser( User user) {
-    	userService.createUser(user);
-        System.out.println(user);
-        return "User is creating!";
+    public String register() {
+        return "register";
+    }
+    
+    @PostMapping("/createUser")
+    public String createUser(@ModelAttribute User user) {
+    	System.out.println(user);
+//    	userService.createUser(user);
+    	return "register";
     }
 }
 
