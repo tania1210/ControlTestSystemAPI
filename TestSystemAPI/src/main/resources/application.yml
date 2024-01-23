@@ -1,6 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/ControlTestSystemDB
-    username: tania1
-    password: 12345
-    driver-class-name: org.postgresql.Driver

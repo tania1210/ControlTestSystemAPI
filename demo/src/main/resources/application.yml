@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ControlTestSystemDB
+    username: tania1
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    
+
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+  error:
+    include-message: always
+    include-binding-errors: always
