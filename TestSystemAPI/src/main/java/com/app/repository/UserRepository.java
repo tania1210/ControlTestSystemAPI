@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.model.Role;
 import com.app.model.User;
 
 @Repository
@@ -13,4 +14,5 @@ import com.app.model.User;
 public interface UserRepository extends JpaRepository<User, Long>{
 	Optional<User> findById(Long id);
 	Optional<User> findByEmail(String email);
+	
 }

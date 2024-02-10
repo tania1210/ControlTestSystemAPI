@@ -28,7 +28,9 @@ public class User implements UserDetails{//implements UserDetails
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	   
-	private String fullName;
+	private String firstName;
+	
+	private String lastName;
 	   
 	private String email;
 	   
@@ -43,11 +45,12 @@ public class User implements UserDetails{//implements UserDetails
 	
 	public User() {}
 	
-	public User(Long id, String fullName, String email, 
+	public User(String firstName, String lastName, String email, 
 			String password, Role role, boolean locked, boolean enabled) {
 		System.out.println("create User");
-		this.id = id;
-		this.fullName = fullName;		
+//		this.id = id;
+		this.firstName = firstName;	
+		this.lastName = lastName;	
 		this.email = email;
 		this.password = password;
 		this.role = role;
@@ -62,12 +65,20 @@ public class User implements UserDetails{//implements UserDetails
 		this.id = id;
 	}
 	
-	public String getFullName() {
-		return fullName;
+	public String getFirstName() {
+		return firstName;
 	}
 	
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	
+	public String getFullName() {
+		return lastName;
+	}
+	
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 	
 	public String getEmail() {
@@ -98,7 +109,7 @@ public class User implements UserDetails{//implements UserDetails
 
 	@Override
 	public String getUsername() {
-		return fullName;
+		return firstName + " " + lastName;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.app.security.UserService;
@@ -47,11 +48,12 @@ public class SecurityConfig {
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
     	DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-    	
     	provider.setPasswordEncoder(bCryptPasswordEncoder);
     	provider.setUserDetailsService(userService);
     	return provider;
     }
+    
+
 	
 }
 
