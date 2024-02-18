@@ -23,21 +23,21 @@ public class UserController {
 		this.userRepository = userRepository;
 	}
 	
-	@GetMapping
-	public ResponseEntity getAllUsers() {
-		System.out.println("getAllUsers");
-		return ResponseEntity.ok(this.userRepository.findAll());
-	}
-	
-	@GetMapping("/{id}")
-	@Operation(summary = "info search to id")
-	public User getById(Long id) { //@Parameter(description = "only one to one")	@PathVariable("id")
-		System.out.println("---------getById----- id = " + id);
-		Optional<User> optionalUser = userRepository.findById(id);
-		System.out.println("---- result:" + optionalUser);
-		return optionalUser.orElse(null);
-		
-	}
+//	@GetMapping
+//	public ResponseEntity getAllUsers() {
+//		System.out.println("getAllUsers");
+//		return ResponseEntity.ok(this.userRepository.findAll());
+//	}
+//	
+//	@GetMapping("/{id}")
+//	@Operation(summary = "info search to id")
+//	public User getById(Long id) { //@Parameter(description = "only one to one")	@PathVariable("id")
+//		System.out.println("---------getById----- id = " + id);
+//		Optional<User> optionalUser = userRepository.findById(id);
+//		System.out.println("---- result:" + optionalUser);
+//		return optionalUser.orElse(null);
+//		
+//	}
 	
 
 }

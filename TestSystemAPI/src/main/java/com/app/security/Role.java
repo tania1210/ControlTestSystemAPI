@@ -1,4 +1,4 @@
-package com.app.model;
+package com.app.security;
 
 public enum Role {
 	ADMIN, USER
