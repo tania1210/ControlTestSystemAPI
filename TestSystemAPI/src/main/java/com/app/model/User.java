@@ -18,13 +18,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Enumerated;
 
-//@Getter
-//@Setter
-//@EqualsAndHashCode
-//@NoArgsConstructor
 @Entity
 @Table(name = "\"user\"")
-public class User implements UserDetails{//implements UserDetails
+public class User implements UserDetails{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,7 +71,7 @@ public class User implements UserDetails{//implements UserDetails
 		this.firstName = firstName;
 	}
 	
-	public String getFullName() {
+	public String getLastName() {
 		return lastName;
 	}
 	

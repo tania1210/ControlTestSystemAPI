@@ -26,10 +26,8 @@ public class AuthenticationService {
 		if(registeredUser == null) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("user is not registered");
 		}else {
-//			String haschedPasswordFromAPI = passwordEncoder.bCryptPasswordEncoder().encode(password);
 			String haschedPasswordFromBD = registeredUser.get().getPassword();
-//			System.out.println("---\nhaschedPasswordFromAPI = " + haschedPasswordFromAPI + "\nhaschedPasswordFromBD = " + haschedPasswordFromBD + "\n---");
-			if(password.equals(haschedPasswordFromBD)) {
+			if(passwordEncoder.bCryptPasswordEncoder().matches(password, haschedPasswordFromBD)) {
 				return ResponseEntity.ok("user is authenticated");
 			}else {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("password is not correct");
