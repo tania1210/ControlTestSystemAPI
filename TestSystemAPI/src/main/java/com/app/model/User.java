@@ -2,7 +2,6 @@ package com.app.model;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +19,7 @@ import jakarta.persistence.Enumerated;
 
 @Entity
 @Table(name = "\"user\"")
-public class User implements UserDetails{
+public class User implements UserDetails{//
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +28,8 @@ public class User implements UserDetails{
 	private String firstName;
 	
 	private String lastName;
+	
+	private String surName;
 	   
 	private String email;
 	   
@@ -45,15 +46,11 @@ public class User implements UserDetails{
 	
 	public User(String firstName, String lastName, String email, 
 			String password, Role role, boolean locked, boolean enabled) {
-		System.out.println("create User");
-//		this.id = id;
 		this.firstName = firstName;	
 		this.lastName = lastName;	
 		this.email = email;
 		this.password = password;
 		this.role = role;
-		this.locked = locked;
-		this.enabled = enabled;
 	}
 		
 	public Long getId() {

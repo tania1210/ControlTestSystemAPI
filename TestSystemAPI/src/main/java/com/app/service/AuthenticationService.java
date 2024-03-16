@@ -10,6 +10,9 @@ import com.app.model.User;
 import com.app.repository.UserRepository;
 import com.app.security.PasswordEncoder;
 
+import exceptions.IncorrectPasswordException;
+import exceptions.UserNotFoundException;
+
 @Service
 public class AuthenticationService {
 
@@ -21,27 +24,20 @@ public class AuthenticationService {
 		this.userRepository = userRepository;
 	}
 	
-	public ResponseEntity<String> login(String email, String password) {
-		Optional<User> registeredUser = userIsRegistered(email);
-		if(registeredUser == null) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("user is not registered");
-		}else {
-			String haschedPasswordFromBD = registeredUser.get().getPassword();
-			if(passwordEncoder.bCryptPasswordEncoder().matches(password, haschedPasswordFromBD)) {
+	public ResponseEntity<String> login(String email, String password) throws UserNotFoundException, IncorrectPasswordException{
+		Optional<User> registeredUser = userRepository.findByEmail(email);
+		if(!registeredUser.isPresent()) {
+			throw new UserNotFoundException();
+		}
+		
+		String haschedPasswordFromBD = registeredUser.get().getPassword();
+		if(passwordEncoder.bCryptPasswordEncoder().matches(password, haschedPasswordFromBD)) {
 				return ResponseEntity.ok("user is authenticated");
 			}else {
-				return ResponseEntity.status(HttpStatus.CONFLICT).body("password is not correct");
-			}
+				throw new IncorrectPasswordException();		
 		}
 
 	}
 	
-	public Optional<User> userIsRegistered(String email) {
-		Optional<User> registeredUser = userRepository.findByEmail(email);
-		if(registeredUser.isPresent()) {
-			return registeredUser;
-		}else {
-			return null;
-		}
-	}
+	
 }

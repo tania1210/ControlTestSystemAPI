@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.service.RegistrationService;
 
+import exceptions.UserAlreadyExistsException;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -26,11 +27,15 @@ public class RegistrationController {
 	@PostMapping("/registration")
 	public ResponseEntity<String> createUser(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
 												@RequestParam("email") String email, @RequestParam("password") String password) {
-		if(registrationService.registration(firstName, lastName, email, password)) {
-			return ResponseEntity.ok("User registered successfully!");
-		}else {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("email is already registered");
+		ResponseEntity<String> message = null;
+		
+		try {
+			message = registrationService.registration(firstName, lastName, email, password);
+			
+		}catch(UserAlreadyExistsException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("User with email " + email + " already exists");
 		}
+		return message;
 	    
 	}
 	

@@ -1,5 +1,6 @@
 package university.com.lab1;
 
+import java.sql.Time;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -30,22 +31,26 @@ public class Operation {
 	}
 	
     public static void main(String[] args) {
-    	Operation o = new Operation();
-        do {
-        	o.inputInteger();                            
-            o.inputDouble();
-        	try {
-                System.out.println("result: " + o.makeOperation(b, c) + "\n"); // Вузол 3: передача даних змінних у метод та отримання результату               
-    		}catch (IllegalArgumentException e) {
-    	        System.out.println("invalid arguments: " + e); // Вузол 5: Виведення винятку
-    	    }catch (ArithmeticException e) {
-    	        System.out.println("division by zero: " + e); // Вузол 6: Виведення винятку
-    	    }
-        	o.isComplete();
-        } while (!runtime.equals("yes"));
+//    	Operation o = new Operation();
+//        do {
+//        	o.inputInteger();                            
+//            o.inputDouble();
+//        	try {
+//                System.out.println("result: " + o.makeOperation(b, c) + "\n"); // Вузол 3: передача даних змінних у метод та отримання результату               
+//    		}catch (IllegalArgumentException e) {
+//    	        System.out.println("invalid arguments: " + e); // Вузол 5: Виведення винятку
+//    	    }catch (ArithmeticException e) {
+//    	        System.out.println("division by zero: " + e); // Вузол 6: Виведення винятку
+//    	    }
+//        	o.isComplete();
+//        } while (!runtime.equals("yes"));
+//
+//        s.close(); // Вузол 7: виклик методу close()
 
-        s.close(); // Вузол 7: виклик методу close()
-
+    	String duraction = "0:20:0";
+    	Time time2 = Time.valueOf(duraction);
+//    	Time time = Time.valueOf(duraction);
+    	System.out.println( " time2 " + time2);
     }
 	
 	public void inputInteger() { 
