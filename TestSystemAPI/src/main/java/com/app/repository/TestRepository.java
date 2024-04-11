@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.app.model.Answer;
 import com.app.model.Question;
 import com.app.model.Test;
 import com.app.model.TypeOfQuestion;
@@ -14,8 +15,7 @@ import com.app.model.TypeOfQuestion;
 public interface TestRepository extends JpaRepository<Test, Long>{
 
     Test save(Test test);
-     
-    
-    Question save(Question question);
+    Test getById(Long id);
 
+    void deleteById(Long id);
 }

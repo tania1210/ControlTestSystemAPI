@@ -36,7 +36,14 @@ public class SecurityConfig {
 //                		"/v*/registration/**").permitAll()
 //            );
         	.authorizeHttpRequests((authz) -> authz
-        			.requestMatchers("/**").permitAll());
+//        			.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+//        			.requestMatchers("/admin/**").hasAuthority("ADMIN")
+        			//        			.requestMatchers("/login/", "/registration/**").permitAll()
+//        			.requestMatchers("/swagger-ui/**").permitAll()
+//        			.requestMatchers("/swagger-ui/**").permitAll()
+        			.requestMatchers("/**").permitAll()
+        			);
+
 
         return http.build();
     }

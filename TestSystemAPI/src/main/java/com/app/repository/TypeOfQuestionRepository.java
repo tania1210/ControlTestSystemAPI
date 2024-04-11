@@ -12,6 +12,6 @@ import com.app.model.TypeOfQuestion;
 @Repository
 public interface TypeOfQuestionRepository extends JpaRepository<TypeOfQuestion, Long>{
 
-	Optional<TypeOfQuestion> findByName(String name);
-	List<TypeOfQuestion> findAll();
+	TypeOfQuestion findByName(String name);
+//	List<TypeOfQuestion> findAll();
 }

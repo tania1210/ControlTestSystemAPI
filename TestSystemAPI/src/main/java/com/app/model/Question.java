@@ -20,9 +20,6 @@ public class Question {
 	@Column(name = "question_text")
 	private String questionText;
 	
-	private byte score;
-	
-
 	@ManyToOne
 	@JoinColumn(name = "type_id", referencedColumnName = "id")
 	private TypeOfQuestion typeId;
@@ -33,10 +30,25 @@ public class Question {
 	
 	public Question() {}
 	
-	public Question(String questionText, byte score, TypeOfQuestion typeId, Test testId) {
+	public Question(String questionText, TypeOfQuestion typeId, Test testId) {
 		this.questionText = questionText;
-		this.score = score;
 		this.typeId = typeId;
+		this.testId = testId;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setQuestionText(String questionText) {
+		this.questionText = questionText;
+	}
+	
+	public void setType(TypeOfQuestion typeId) {
+		this.typeId = typeId;
+	}
+	
+	public void setTest(Test testId) {
 		this.testId = testId;
 	}
 

@@ -16,11 +16,20 @@ public class TypeOfQuestion {
 	
 	private String name;
 	
-	public TypeOfQuestion(String name) {
+	public TypeOfQuestion() {}
+	
+	public TypeOfQuestion(Long id, String name) {
+		this.id = id;
 		this.name = name;
+	}
+
+	public Long getId() {
+		return id;
 	}
 	
 	public String getName() {
 		return name;
 	}
+	
+
 }

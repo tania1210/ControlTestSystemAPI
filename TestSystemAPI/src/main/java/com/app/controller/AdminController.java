@@ -31,7 +31,7 @@ public class AdminController {
 	public List<UserDTO> getAllUsers() {
 		return adminService.getAllUsers();
 	}
-	
+		
 	@PutMapping
 	public ResponseEntity<Void> updateUser(Long id, Map<String, Object> updateData) {
 		try {

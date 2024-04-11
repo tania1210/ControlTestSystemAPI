@@ -9,137 +9,104 @@ public class Operation {
 	static int b; 
 	static double c;
 	static String runtime;
-	
-	public void setB(int b) {
-		this.b = b;
-	}
-	
-	public void setC(double c) {
-		this.c= c;
-	}
-	
-	public static int getB() {
-		return b;
-	}
-	
-	public static double getC() {
-		return c;
-	}
-	
-	public static String getRuntime() {
+		
+	public String getRuntime() {
 		return runtime;
 	}
 	
-    public static void main(String[] args) {
-//    	Operation o = new Operation();
-//        do {
-//        	o.inputInteger();                            
-//            o.inputDouble();
-//        	try {
-//                System.out.println("result: " + o.makeOperation(b, c) + "\n"); // Вузол 3: передача даних змінних у метод та отримання результату               
-//    		}catch (IllegalArgumentException e) {
-//    	        System.out.println("invalid arguments: " + e); // Вузол 5: Виведення винятку
-//    	    }catch (ArithmeticException e) {
-//    	        System.out.println("division by zero: " + e); // Вузол 6: Виведення винятку
-//    	    }
-//        	o.isComplete();
-//        } while (!runtime.equals("yes"));
-//
-//        s.close(); // Вузол 7: виклик методу close()
+    public static void main(String[] args) {// 1: початок
+    	Operation o = new Operation();
+        do {
+        	o.inputInteger();//2: виклик методу для введення b
+            o.inputDouble();//7: виклик методу для введення c
+        	try {
+                System.out.println("result: " + o.makeOperation(b, c) + "\n"); //11: виконання обчислення
+    		}catch (IllegalArgumentException e) {//22: обробка винятків
+    	        System.out.println("invalid arguments: " + e); 
+    	    }catch (ArithmeticException e) {// 23: обробка винятків
+    	        System.out.println("division by zero: " + e); 
+    	    }
+        	o.isComplete();//24: виклик методу для вибору дії
+        } while (!runtime.equals("yes"));//27: вихід з програми
 
-    	String duraction = "0:20:0";
-    	Time time2 = Time.valueOf(duraction);
-//    	Time time = Time.valueOf(duraction);
-    	System.out.println( " time2 " + time2);
+        s.close(); // 28: закриття сканера
+    	
     }
 	
-	public void inputInteger() { 
+	public void inputInteger() {//2: метод для введення b
 		 boolean isValidInput = false;
 		 
      	System.out.println("choose value of \"b\": (1, 2, 3)");
 
-	        while (!isValidInput) {
+	        while (!isValidInput) {//3: початок циклу
 	        	s = new Scanner(System.in);
 	            try {
-	        		b = s.nextInt();
-	        		if(b < 1 || b > 3) {
+	        		b = s.nextInt();//4: зміна значення b
+	        		if(b < 1 || b > 3) {//5: перевірка умов
 	        			System.out.println("wrong number. You can choose only: 1, 2, 3");
 	        		}else {
 	        			isValidInput = true;
 	        		}
-	            }catch(InputMismatchException e) {
+	            }catch(InputMismatchException e) {//6: обробка винятків
 	            	System.out.println("Invalid input. Please enter integer type");
 	            	s.nextLine();
 	            }
 	        }
 	}
 	
-	public void inputDouble() { 
+	public void inputDouble() {//7: метод для введення с
 		 boolean isValidInput = false;
 		System.out.println("input value of \"c\": ");
 
-		 while(!isValidInput) {
+		 while(!isValidInput) {//8: початок циклу
 			 s = new Scanner(System.in);
-			try {
-				c = s.nextDouble();
+			try { 
+				c = s.nextDouble();//9: зміна значення c
 				isValidInput = true;
-			}catch(InputMismatchException e) {
+			}catch(InputMismatchException e) {//10: обробка винятків
 				System.out.println("you print invalid type of c. Please enter integer or double");
 				s.nextLine();
 			}
 		 }
 	}
 	
-	public double makeOperation(int b, double c) {
-		double a = 0; // Вузол 11: Явне оголошення змінної
-
-			if(b == 1) {
-				a = (4 * b) - (9 * c); // Вузол 12: Обчислення значення а
-			}else if(b == 2) {
-				a = Math.sqrt(2 - b * c); // Вузол 13: Обчислення значення а
-				if(Double.isNaN(a)) {
-					throw new IllegalArgumentException("Invalid arguments: b = " + b + ", c = " + c);
-					// Вузол 14: Викидання винятку
+	public double makeOperation(int b, double c) throws IllegalArgumentException, ArithmeticException{//11: метод обчислення 
+		double a = 0;
+			if(b == 1) {//12: перевірка умови №1
+				a = (4 * b) - (9 * c);//13: змінити значення а
+			}else if(b == 2) {//14: інакше перевірка умови №2
+				a = Math.sqrt(2 - b * c);//15: змінити значення а
+				if(Double.isNaN(a)) {//16: перевірити чи а існує
+					throw new IllegalArgumentException("Invalid arguments: b = " + b + ", c = " + c);//17: викинути виняток
 				}			
-			}else if(b == 3) {
-				if(c == 0) {
-					throw new ArithmeticException("Division by zero."); // Вузол 15: Викидання винятку
-				}else {
-					a = b / Math.pow(c, 2); // Вузол 16: Обчислення значення а
+			}else if(b == 3) {//18: інакше перевірити умову №3
+				if(c == 0) {//19: перевірити чи с != 0
+					throw new ArithmeticException("Division by zero.");//20: викинути виняток
+				}else { 
+					a = b / Math.pow(c, 2);//21: змінити значення а
 				}		
 			}		
 
-		return a; // Вузол 17: Повернення нового значення а 
+		return a;
 	}
 	
-	public boolean isComplete() {
+	public boolean isComplete() {//24: метод вибору дії
 	    boolean isValidInput = false;
-//	    String runtimeInput = null;
 
 	    System.out.println("complete the program?: (yes or no)");
 
-	    while (!isValidInput) {
+	    while (!isValidInput) {//25: початок циклу
 	    	runtime = s.next();
-	        if (runtime.equals("yes") || runtime.equals("no")) {
+	        if (runtime.equals("yes") || runtime.equals("no")) {//26: перевірка умови
 	            isValidInput = true;
 	        } else {
 	            System.out.println("the text is wrong. Please try one more: \"yes\" or \"no\"");
 	        }
-//	    	try {
-//	    		runtime = s.next();
-//	    		System.out.println(runtime.equals("yes"));
-//		        if (runtime.equals("yes") || runtime.equals("no")) {
-//		            isValidInput = true;
-//		        }else {
-//		        	throw new InputMismatchException();
-//		        }
-//	    	}catch(InputMismatchException e) {
-//	            System.out.println("the text is wrong. Please try one more: \"yes\" or \"no\"");
-//
-//	    	}
 	    }
 
 	    return isValidInput;
 	}
+
+
 
 }

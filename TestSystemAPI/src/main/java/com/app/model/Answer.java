@@ -26,9 +26,30 @@ public class Answer {
 	
 	public Answer() {}
 	
-	public Answer(String answerText, boolean isCorrect) {
+	public Answer(String answerText, boolean isCorrect, Question questionId) {
 		this.answerText = answerText;
 		this.isCorrect = isCorrect;
+		this.questionId = questionId;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setAnswerText(String answerText) {
+		this.answerText = answerText;
+	}
+	
+	public void setIsCorrect(boolean isCorrect) {
+		this.isCorrect = isCorrect;
+	}
+	
+	public boolean getIsCorrect() {
+		return isCorrect;
+	}
+	
+	public void setQuestion(Question questionId) {
+		this.questionId = questionId;
 	}
 	
 	
