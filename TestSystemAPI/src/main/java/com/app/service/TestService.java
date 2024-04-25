@@ -156,7 +156,7 @@ public class TestService {
 			for(int i = 0; ; i++) {
 				List<Question> question = questionRepository.findByTestId(test);
 				System.out.println("question found");
-				questionRepository.deleteById(question.get()));
+//				questionRepository.deleteById(question.get()));
 			    if (question.isEmpty()) {
 			        break; // Виходимо з циклу, якщо список порожній
 			    }
