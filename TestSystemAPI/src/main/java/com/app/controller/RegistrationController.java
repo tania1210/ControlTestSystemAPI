@@ -18,11 +18,6 @@ import lombok.AllArgsConstructor;
 public class RegistrationController {
 	
 	private RegistrationService registrationService;
-
-	
-	public RegistrationController(RegistrationService registrationService) {
-		this.registrationService = registrationService;
-	}
 	
 	@PostMapping("/registration")
 	public ResponseEntity<String> createUser(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,

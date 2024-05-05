@@ -22,13 +22,10 @@ import lombok.AllArgsConstructor;
 public class AdminController {
 
 	private AdminService adminService;
-	
-	public AdminController(AdminService adminService) {
-		this.adminService = adminService;
-	}
-	
+
 	@GetMapping
 	public List<UserDTO> getAllUsers() {
+
 		return adminService.getAllUsers();
 	}
 		

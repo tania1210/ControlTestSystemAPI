@@ -1,23 +1,27 @@
 package university.com.lab2;
 
+import java.util.NoSuchElementException;
+
 public class MainO {
     public static void main(String[] args) {
-//        int[] array = {1, 10, 3, 8, 2, 7, 6, 9, 4}; // Приклад масиву
-        int[] array = {};
+        int[] array = {1, 10, 3, 8, 2, 7, 6, 9, 4}; // Приклад масиву
         try {
         	int minLocalMax = findMinLocalMax(array);
         	System.out.println("Мінімальний локальний максимум: " + minLocalMax); //виводимо результат
-        }catch(IllegalArgumentException e) {
-        	
+        }catch(NoSuchElementException e) {//обробляємо виняток, коли в масиві немає локальних max
+        	System.out.println("В масиві немає локальних максимумів");
         }
         
     }
 
-    public static int findMinLocalMax(int[] array) throws IllegalArgumentException{
-    	
-        if (array == null || array.length < 3) { // перевіряємо чи масив має хочаб 3 елементи
-            throw new IllegalArgumentException();
-        }
+    public static int findMinLocalMax(int[] array) throws NoSuchElementException{
+    	try {
+	        if (array == null || array.length < 3) { // перевіряємо чи масив має хочаб 3 елементи
+	            throw new IllegalArgumentException();
+	        }
+	    }catch(IllegalArgumentException e) {//обробляємо виняток коли в масиві не достатньо елементів
+	    	System.out.println("даний масив пустий або не містить хоча б 3 елементи");
+	    }
 
         int minLocalMax = Integer.MAX_VALUE; //оголошуємо змінну для результату
 
@@ -30,7 +34,7 @@ public class MainO {
         }
 
         if (minLocalMax == Integer.MAX_VALUE) { //перевіряємо чи було знайдено хочаб один локальний максимум
-            throw new IllegalArgumentException("В масиві немає локальних максимумів");
+            throw new NoSuchElementException("");
         }
         return minLocalMax;
     }

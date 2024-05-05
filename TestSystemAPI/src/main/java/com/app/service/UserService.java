@@ -19,12 +19,7 @@ public class UserService implements UserDetailsService{
 	private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
 	//must be final
 	private UserRepository userRepository;
-	
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-    
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		return userRepository.findByEmail(email)

@@ -18,12 +18,6 @@ public class AuthenticationController {
 
 	private AuthenticationService authenticationService;
 
-	
-	public AuthenticationController(AuthenticationService authenticationService) {
-		this.authenticationService = authenticationService;
-	}
-	
-	
 	@PostMapping("login")
 	public ResponseEntity<String> authentication(@RequestParam("email") String email, @RequestParam("password") String password) {
 		ResponseEntity<String> message = null;
