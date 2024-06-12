@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.authentication;
 
 import java.util.List;
 import java.util.Map;
@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dto.UserDTO;
-import com.app.dto.UserDTOUpdate;
-import com.app.model.User;
-import com.app.service.AdminService;
+import com.app.service.authentication.AdminService;
 
 import lombok.AllArgsConstructor;
 
@@ -52,7 +50,14 @@ public class AdminController {
 
 	
 	}
-	
+
+	/*add user
+	grand user to teacher(add subject)/admin*/
+
+
+	/*add subject
+	* update subject
+	* delete subject*/
 	
 	
 	

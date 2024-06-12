@@ -1,11 +1,10 @@
-package com.app.service;
+package com.app.service.authentication;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.app.dto.UserDTO;

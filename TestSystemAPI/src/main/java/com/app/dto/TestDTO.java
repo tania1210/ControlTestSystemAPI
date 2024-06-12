@@ -5,13 +5,13 @@ import java.sql.Time;
 public class TestDTO {
 	
 	private String name;
-	private Time duraction;
+	private String duraction;
 	private byte fullScore;
 	private byte attemps;
 	
 	public TestDTO() {}
-	
-	public TestDTO(String name, Time duraction, byte fullScore, byte attemps) {
+
+	public TestDTO(String name, String duraction, byte fullScore, byte attemps) {
 		this.setName(name);
 		this.setDuraction(duraction);
 		this.setFullScore(fullScore);
@@ -26,11 +26,11 @@ public class TestDTO {
 		this.name = name;
 	}
 
-	public Time getDuraction() {
+	public String getDuraction() {
 		return duraction;
 	}
 
-	public void setDuraction(Time duraction) {
+	public void setDuraction(String duraction) {
 		this.duraction = duraction;
 	}
 

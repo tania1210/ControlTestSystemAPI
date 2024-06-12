@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.service.authentication;
 
 import java.util.Optional;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.app.model.User;
 import com.app.repository.RegistrationRepository;
 import com.app.repository.UserRepository;
-import com.app.security.PasswordEncoder;
+import com.app.security.PasswordEncoderConfig;
 import com.app.security.Role;
 
 import exceptions.UserAlreadyExistsException;
@@ -18,22 +18,22 @@ public class RegistrationService {
 	
 	private RegistrationRepository registrationRepository;
 	private UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoderConfig passwordEncoder;
 	
 	public RegistrationService(RegistrationRepository registrationRepository, UserRepository userRepository) {
-		this.passwordEncoder = new PasswordEncoder();
+		this.passwordEncoder = new PasswordEncoderConfig();
 		this.registrationRepository = registrationRepository;
 		this.userRepository = userRepository;
 	}
 	
-	public ResponseEntity<String> registration(String firstName, String lastName, String email, String password) throws UserAlreadyExistsException{
+	public ResponseEntity<String> registration(String firstName, String lastName, String surName, String email, String password) throws UserAlreadyExistsException{
 		Optional<User> existingUser = userRepository.findByEmail(email);
 		if(existingUser.isPresent()) {
 			throw new UserAlreadyExistsException();
 		}
 		
 		String hashedPassword = passwordEncoder.bCryptPasswordEncoder().encode(password);
-		User user = new User(firstName, lastName, email, hashedPassword, Role.USER, false, true);
+		User user = new User(firstName, lastName, surName, email, hashedPassword, Role.USER, false, true);
 		registrationRepository.save(user);
 		return ResponseEntity.ok().body("User is registered");		
 	    

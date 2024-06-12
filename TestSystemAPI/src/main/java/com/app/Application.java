@@ -10,6 +10,7 @@ public class Application {
 		System.out.println("main run");
 		SpringApplication.run(Application.class, args);
 		System.out.println("application run");
+
 	}
 
 }

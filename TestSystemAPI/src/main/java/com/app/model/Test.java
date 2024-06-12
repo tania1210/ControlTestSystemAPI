@@ -30,6 +30,10 @@ public class Test {
 	
 	@Column(columnDefinition = "boolean default false")
 	private boolean isActive;
+
+	@ManyToOne
+	@JoinColumn(name = "subject_id", referencedColumnName = "id")
+	private Subject subjectId;
 	
 	private byte fullScore;
 	

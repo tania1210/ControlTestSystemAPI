@@ -18,8 +18,7 @@ public class TypeOfQuestion {
 	
 	public TypeOfQuestion() {}
 	
-	public TypeOfQuestion(Long id, String name) {
-		this.id = id;
+	public TypeOfQuestion(String name) {
 		this.name = name;
 	}
 
@@ -31,5 +30,7 @@ public class TypeOfQuestion {
 		return name;
 	}
 	
-
+	public void setName(String name) {
+		this.name = name;
+	}
 }

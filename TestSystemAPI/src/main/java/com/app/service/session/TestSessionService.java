@@ -1,7 +1,9 @@
-package com.app.service;
+package com.app.service.session;
 
 import com.app.model.Test;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TestSessionService {
 
    public Long startTestSession(Long userId, Test testId) {

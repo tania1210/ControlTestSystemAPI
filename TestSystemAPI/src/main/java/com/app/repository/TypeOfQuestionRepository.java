@@ -12,6 +12,10 @@ import com.app.model.TypeOfQuestion;
 @Repository
 public interface TypeOfQuestionRepository extends JpaRepository<TypeOfQuestion, Long>{
 
+	TypeOfQuestion getById(Long id);
 	TypeOfQuestion findByName(String name);
+
+	void deleteById(Long id);
+
 //	List<TypeOfQuestion> findAll();
 }

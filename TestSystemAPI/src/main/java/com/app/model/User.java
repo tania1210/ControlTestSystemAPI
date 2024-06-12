@@ -1,7 +1,7 @@
 package com.app.model;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -43,16 +43,25 @@ public class User implements UserDetails{//
 	private boolean enabled;
 	
 	public User() {}
-	
-	public User(String firstName, String lastName, String email, 
+
+	public User(String firstName, String lastName, String surName, String email,
 			String password, Role role, boolean locked, boolean enabled) {
 		this.firstName = firstName;	
-		this.lastName = lastName;	
+		this.lastName = lastName;
+		this.surName = surName;
 		this.email = email;
 		this.password = password;
 		this.role = role;
 	}
-		
+
+	private User(Builder builder) {
+		this.firstName = builder.firstName;
+		this.lastName = builder.lastName;
+		this.email = builder.email;
+		this.password = builder.password;
+		this.role = builder.role;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -74,6 +83,14 @@ public class User implements UserDetails{//
 	
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getSurName() {
+		return surName;
+	}
+
+	public void setSurName(String surName) {
+		this.surName = surName;
 	}
 	
 	public String getEmail() {
@@ -98,8 +115,7 @@ public class User implements UserDetails{//
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
-		return Collections.singleton(authority);
+		return List.of(new SimpleGrantedAuthority(role.name()));
 	}
 
 	@Override
@@ -114,7 +130,7 @@ public class User implements UserDetails{//
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return !locked;
+		return true;
 	}
 
 	@Override
@@ -125,6 +141,44 @@ public class User implements UserDetails{//
 	@Override
 	public boolean isEnabled() {
 		return enabled;
+	}
+
+
+	public static class Builder {
+		private String firstName;
+		private String lastName;
+		private String email;
+		private String password;
+		private Role role;
+
+		public Builder firstname(String firstName) {
+			this.firstName = firstName;
+			return this;
+		}
+
+		public Builder lastname(String lastName) {
+			this.lastName = lastName;
+			return this;
+		}
+
+		public Builder email(String email) {
+			this.email = email;
+			return this;
+		}
+
+		public Builder password(String password) {
+			this.password = password;
+			return this;
+		}
+
+		public Builder role(Role role) {
+			this.role = role;
+			return this;
+		}
+
+		public User build() {
+			return new User(this);
+		}
 	}
 	
 }

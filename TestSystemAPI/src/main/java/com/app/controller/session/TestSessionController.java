@@ -1,15 +1,14 @@
-package com.app.controller;
+package com.app.controller.session;
 
 import com.app.model.Test;
 import com.app.model.TestSession;
-import com.app.service.TestSessionService;
-import lombok.AllArgsConstructor;
+import com.app.service.session.TestSessionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 //@AllArgsConstructor
-@RequestMapping("/test-session")
+@RequestMapping("api/v1/sessionNOTCOMPLETE")
 public class TestSessionController {
 	TestSession testSession;
 	TestSessionService testSessionService;
