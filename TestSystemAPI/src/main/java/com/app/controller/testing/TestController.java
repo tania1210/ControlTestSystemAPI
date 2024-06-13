@@ -1,6 +1,7 @@
 package com.app.controller.testing;
 
 import com.app.model.Test;
+import exceptions.TestAlreadyExistsException;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +27,17 @@ public class TestController {
 		}
 
 		@PostMapping
-		@PreAuthorize("hasAuthority('ADMIN')")
+//		@PreAuthorize("hasAuthority('ADMIN')")
 		public ResponseEntity<?> createNewTest(@Parameter(description = "Name of the test") @RequestParam String name,
 											   @Parameter(description = "Duration of the test") @RequestParam String duration,
 											   @Parameter(description = "Full score of the test") @RequestParam byte fullScore,
 											   @Parameter(description = "Number of attempts allowed") @RequestParam byte attempts) {
 			try {
-				Long id = testService.createNewTest(name, duration, fullScore, attempts);
-				return ResponseEntity.ok(id);
-
+				return ResponseEntity.status(HttpStatus.CREATED).body(testService.createNewTest(name, duration, fullScore, attempts));
+			}catch(TestAlreadyExistsException e) {
+				return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 			}catch(InvalidFormatException e) {
-				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Type of time is not correct");
+				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Invalid format for duration");
 			}
 		}
 
@@ -50,9 +51,9 @@ public class TestController {
 				testService.setTestDatas(id, name, duraction, fullScore, attempts);
 				return ResponseEntity.ok("Test datas was update");
 			}catch(InvalidFormatException e) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("invalid format of time");
-			}catch(NullPointerException e) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("any data was change. Test wasn't found");
+				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Invalid format for duration");
+			}catch(EntityNotFoundException e) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 			}
 		}
 
@@ -60,16 +61,22 @@ public class TestController {
 		public ResponseEntity<?> deleteTest(@Parameter(description = "id of the test") @RequestParam Long id) {
 			try {
 				testService.deleteTest(id);
-				return ResponseEntity.ok("");
+				return ResponseEntity.ok("test was deleted");
 			}catch(EntityNotFoundException e) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test wasn`t found. Wrong id");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 			}
 		}
 
 		@GetMapping
-		public List<Test> fetchTest(@Parameter(description = "id of the user") @RequestParam Long id) {
+		public ResponseEntity<?> fetchTest(@Parameter(description = "id of the user") @RequestParam Long id) {
 
-			return testService.fetchTest(id);
+			try {
+				List<Test> tests = testService.fetchTest(id);
+				return ResponseEntity.ok(tests);
+			}catch (EntityNotFoundException e) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+			}
+
 		}
 		
 //SHOW TEST DATAS

@@ -2,6 +2,7 @@ package com.app.controller.testing;
 
 import com.app.model.Question;
 import com.app.service.testing.QuestionService;
+import exceptions.QuestionAlreadyExistsException;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -22,30 +23,28 @@ public class QuestionController {
 
     @PostMapping
     public ResponseEntity<?> createNewQuestion(@Parameter(description = "text of the question") @RequestParam String text,
-                                               @Parameter(description = "Type of the question") @RequestParam String type,
+                                               @Parameter(description = "Type id of the question") @RequestParam Long typeId,
                                                @Parameter(description = "Test id of the question") @RequestParam Long testId) {
         try {
-            Long id = questionService.createNewQuestion(text, type, testId);
-            return ResponseEntity.ok(id);
+            return ResponseEntity.status(HttpStatus.CREATED).body(questionService.createNewQuestion(text, typeId, testId));
+        }catch (QuestionAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }catch(IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Datas was incorrect");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }catch(EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("test not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @PatchMapping
-    public ResponseEntity<String> setQuestion(@Parameter(description = "id of the question") @RequestParam Long id,
+    public ResponseEntity<?> setQuestion(@Parameter(description = "id of the question") @RequestParam Long id,
                                               @Parameter(description = "text of the question") @RequestParam String text,
-                                              @Parameter(description = "type of the question") @RequestParam String type,
+                                              @Parameter(description = "type of the question") @RequestParam Long typeId,
                                               @Parameter(description = "test of the question") @RequestParam Long testId) {
         try {
-            questionService.setQuestionDatas(id, text, type, testId);
-            return ResponseEntity.ok("Question datas was update");
+            return ResponseEntity.status(HttpStatus.OK).body(questionService.setQuestionDatas(id, text, typeId, testId));
         }catch(EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found this type of question");
-        }catch(NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("any data was change. Question wasn't found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -53,14 +52,19 @@ public class QuestionController {
     public ResponseEntity<String> deleteQuestion(@Parameter(description = "id of the question") @RequestParam Long id) {
         try {
             questionService.deleteQuestion(id);
-            return ResponseEntity.ok("Question was delete");
+            return ResponseEntity.ok("Question's been deleted");
         }catch(EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question wasn`t found. Wrong id");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @GetMapping("RETURN ONLY IDS")
-    public List<Question> fetchQuestions(@Parameter(description = "id of the test") @RequestParam Long id) {
-        return questionService.fetchQuestions(id);
+    @GetMapping
+    public ResponseEntity<?> fetchQuestions(@Parameter(description = "id of the test") @RequestParam Long id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(questionService.fetchQuestions(id));
+        }catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
     }
 }

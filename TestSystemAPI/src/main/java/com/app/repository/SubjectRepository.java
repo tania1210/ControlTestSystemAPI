@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
@@ -18,6 +19,8 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
     @Query("SELECT s FROM Subject s WHERE s.userId.id = :userId")
     List<Subject> findAllSubjectByUserId(@Param("userId") Long Userid);
+
+    Optional<Object> findByName(String name);
 //    Subject findSubjectByGroupId(Group group);
 
 }

@@ -6,14 +6,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
 public class AuthenticationResponse {
 
     private String token;
 
+    public AuthenticationResponse(String token) {
+        this.token = token;
+    }
+
     public AuthenticationResponse(Builder builder) {
         this.token = builder.token;
+    }
+
+    // Getter
+    public String getToken() {
+        return token;
+    }
+
+    // Setter (якщо потрібно)
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public static class Builder {
@@ -27,6 +39,6 @@ public class AuthenticationResponse {
         public AuthenticationResponse build() {
             return new AuthenticationResponse(this);
         }
-
     }
 }
+

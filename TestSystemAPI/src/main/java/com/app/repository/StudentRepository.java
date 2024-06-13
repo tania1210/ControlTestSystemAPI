@@ -6,12 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Student getById(Long id);
 
     @Query("SELECT s FROM Student s WHERE s.userId.id = :userId")
-    Student findStudentByUserId(@Param("userId") Long userId);
+    Optional<Student> findStudentByUserId(@Param("userId") Long userId);
 
 }

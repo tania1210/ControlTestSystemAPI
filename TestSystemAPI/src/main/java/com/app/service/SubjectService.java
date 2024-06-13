@@ -4,6 +4,7 @@ import com.app.model.*;
 import com.app.repository.SubjectRepository;
 import com.app.repository.UserRepository;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import exceptions.SubjectAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -22,30 +23,50 @@ public class SubjectService {
         this.userRepository = userRepository;
     }
 
-    public void createNewSubject(String name, String duraction, Long id) {
-        Optional<User> user = userRepository.findById(id);
-        subjectRepository.save(new Subject(name, user.get()));
-
-    }
-
-    public void setSubject(Long id, String name) {
-        if(id == null) {
-            throw new NullPointerException();
+    public Subject createNewSubject(String name, Long id) throws EntityNotFoundException, SubjectAlreadyExistsException {
+        if(subjectRepository.findByName(name).isPresent()) {
+            throw new SubjectAlreadyExistsException("subject with this name is already exists");
         }else {
-            Subject subject = subjectRepository.getById(id);
-            if(name != null) {
-                subject.setName(name);
+            if(userRepository.findById(id).isEmpty()) {
+                throw new EntityNotFoundException("user's not found. Wrong id");
+            }else {
+                Optional<User> user = userRepository.findById(id);
+                return subjectRepository.save(new Subject(name, user.get()));
             }
-            subjectRepository.save(subject);
         }
     }
 
-    public void deleteTest(Long id) {
-        subjectRepository.deleteById(id);
+    public Subject setSubject(Long id, String name, Long userId) throws EntityNotFoundException {
+        if(subjectRepository.findById(id).isEmpty()) {
+            throw new EntityNotFoundException("subject's not found. Wrong id");
+        }else {
+            if(userRepository.findById(userId).isEmpty()) {
+                throw new EntityNotFoundException("user not found. Wrong id");
+            } else {
+                Subject subject = subjectRepository.getById(id);
+                if(!name.equals(subject.getName())) {
+                    subject.setName(name);
+                }
+                return subjectRepository.save(subject);
+            }
+        }
     }
 
-    public List<Subject> fetchSubject(Long id) {
-        return subjectRepository.findAllSubjectByUserId(id);
+    public void deleteSubject(Long id) throws EntityNotFoundException {
+        if(subjectRepository.findById(id).isEmpty()) {
+            throw new EntityNotFoundException("subject's not found with this id");
+        }else {
+            subjectRepository.deleteById(id);
+        }
+    }
+
+    public List<Subject> fetchSubject(Long id) throws EntityNotFoundException {
+        if(userRepository.findById(id).isEmpty()) {
+            throw new EntityNotFoundException("user's not found with this id");
+        }else {
+            return subjectRepository.findAllSubjectByUserId(id);
+        }
+
     }
 
 

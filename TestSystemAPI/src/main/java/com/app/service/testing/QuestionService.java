@@ -8,10 +8,13 @@ import com.app.repository.AnswerRepository;
 import com.app.repository.QuestionRepository;
 import com.app.repository.TestRepository;
 import com.app.repository.TypeOfQuestionRepository;
+import exceptions.QuestionAlreadyExistsException;
+import exceptions.TestAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QuestionService {
@@ -28,55 +31,75 @@ public class QuestionService {
         this.answerRepository = answerRepository;
     }
 
-    public Long createNewQuestion(String text, String typeN, Long testId) throws IllegalArgumentException, EntityNotFoundException {
-        TypeOfQuestion type = typeOfQuestionRepository.findByName(typeN);
-        if(text.isEmpty() || type == null) {
-            throw new IllegalArgumentException();
-        }else if(testRepository.getById(testId) == null){
-            throw new EntityNotFoundException();
+    public Question createNewQuestion(String questionText, Long typeId, Long testId) throws QuestionAlreadyExistsException, IllegalArgumentException, EntityNotFoundException {
+        Optional<Question> existingQuestion = questionRepository.findByQuestionText(questionText);
+        if(existingQuestion.isPresent()) {
+           throw new QuestionAlreadyExistsException("this question is already exists");
         }else {
-            System.out.println("class of question is = " + questionRepository.getById((long) 8).getClass());
-            Question question = questionRepository.save(new Question(text, type, testRepository.getById(testId)));//test.orElseThrow(() -> new IllegalArgumentException()
-            return question.getId();
+            Optional<TypeOfQuestion> existingtype = typeOfQuestionRepository.findById(typeId);
+            if(!testRepository.findById(testId).isPresent()){
+                throw new EntityNotFoundException("test not found");
+            }if(!existingtype.isPresent()) {
+                throw new IllegalArgumentException("this question type not found");
+            }else {
+                Question question = questionRepository.save(new Question(questionText, existingtype.get(), testRepository.getById(testId)));
+                return question;
+            }
         }
-
     }
 
-    //SET
-    public void setQuestionDatas(Long id, String questionText, String typeS, Long testId) throws EntityNotFoundException, NullPointerException{
-        if(id == null) {
-            throw new NullPointerException();
+    public Question setQuestionDatas(Long id, String questionText, Long typeId, Long testId) throws EntityNotFoundException{
+        Optional<Question> existingQuestion = questionRepository.findById(id);
+        if(!existingQuestion.isPresent()) {
+            throw new EntityNotFoundException("question not found. No data's been changed");
         }else {
             Question question = questionRepository.getById(id);
             if(questionText != null) {
                 question.setQuestionText(questionText);
-            }if(typeS != null) {
-                TypeOfQuestion type = typeOfQuestionRepository.findByName(typeS);
-                question.setType(type);
-            }if(testId != null) {
-                Test test = testRepository.getById(testId);
-                question.setTest(test);
+            }if(typeId != 0) {
+                Optional<TypeOfQuestion> existingtype = typeOfQuestionRepository.findById(typeId);
+                if(existingtype.isPresent()) {
+                    question.setTypeId(existingtype.get());
+                }else {
+                    throw new EntityNotFoundException("new type of question hasn't found");
+                }
+            }if(testId != 0) {
+                Optional<Test> existingTest = testRepository.findById(testId);
+                if(existingTest.isPresent()) {
+                    question.setTestId(existingTest.get());
+                }else {
+                    throw new EntityNotFoundException("new test of this question hasn't found");
+                }
             }
-            questionRepository.save(question);
+            Question question1 = questionRepository.save(question);
+            System.out.println(question1);
+            return question1;
         }
-
     }
 
-    //DELETE
     public void deleteQuestion(Long id) throws EntityNotFoundException{
-        Question question = questionRepository.getById(id);
+        Optional<Question> existingQuestion = questionRepository.findById(id);
+        if(!existingQuestion.isPresent()) {
+            throw new EntityNotFoundException("question hasn't found");
+        }else {
+            List<Answer> answers = answerRepository.findByQuestionId(existingQuestion.get());
 
-        List<Answer> answers = answerRepository.findByQuestionId(question);
-
-        for (Answer answer : answers) {
-            System.out.println(answer.getId());
-            answerRepository.deleteById(answer.getId());
+            for (Answer answer : answers) {
+                System.out.println(answer.getId());
+                answerRepository.deleteById(answer.getId());
+            }
+            questionRepository.deleteById(id);
         }
 
-        questionRepository.deleteById(id);
     }
 
-    public List<Question> fetchQuestions(Long id) {
-        return questionRepository.findAllQuestionByTestId(id);
+    public List<Question> fetchQuestions(Long id) throws EntityNotFoundException {
+        Optional<Test> existingTest = testRepository.findById(id);
+        if(existingTest.isEmpty()) {
+            throw new EntityNotFoundException("test not exists. Wrong id");
+        }else {
+            return questionRepository.findAllQuestionByTestId(id);
+        }
+
     }
 }

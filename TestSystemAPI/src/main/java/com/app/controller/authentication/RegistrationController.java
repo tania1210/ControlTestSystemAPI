@@ -1,5 +1,8 @@
 package com.app.controller.authentication;
 
+import com.app.model.User;
+import exceptions.InvalidPasswordException;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,18 +20,22 @@ public class RegistrationController {
 	
 	private RegistrationService registrationService;
 	
-	@PostMapping
-	public ResponseEntity<String> createUser(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, @RequestParam("surName") String surName,
-												@RequestParam("email") String email, @RequestParam("password") String password) {
-		ResponseEntity<String> message = null;
-		
+	@PostMapping("/signUp")
+	public ResponseEntity<?> createUser(@Parameter(description = "firstName of the user") @RequestParam String firstName,
+										@Parameter(description = "lastName of the user") @RequestParam String lastName,
+										@Parameter(description = "surName of the user") @RequestParam String surName,
+										@Parameter(description = "email of the user") @RequestParam String email,
+										@Parameter(description = "password of the user") @RequestParam String password) {
+
 		try {
-			message = registrationService.registration(firstName, lastName, surName, email, password);
-			
+			User user = registrationService.registration(firstName, lastName, surName, email, password);
+			return ResponseEntity.status(HttpStatus.CREATED).body(user);
+
 		}catch(UserAlreadyExistsException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("User with email " + email + " already exists");
+		}catch (InvalidPasswordException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		return message;
 	    
 	}
 	

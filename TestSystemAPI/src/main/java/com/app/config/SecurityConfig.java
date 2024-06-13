@@ -3,7 +3,9 @@ package com.app.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -32,8 +34,10 @@ public class SecurityConfig {
 				.csrf(csrf -> csrf.disable()) // Налаштування CSRF через Customizer
 				.authorizeHttpRequests(auth -> auth // Використання authorizeHttpRequests для нових версій
 //						.requestMatchers("/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
-//						.requestMatchers("/test/getAllTypes").hasAuthority("ADMIN")
+//						.requestMatchers("api/v1/login").permitAll()
 						.requestMatchers("/**").permitAll()
+//						.requestMatchers("api/v1/tests").hasAuthority("USER")
+
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Використання Customizer для налаштування SessionManagement
@@ -41,6 +45,7 @@ public class SecurityConfig {
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
 
+		System.out.println("Security configuration loaded");
 		return http.build();
 	}
 

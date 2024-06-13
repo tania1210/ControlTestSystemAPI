@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
@@ -21,6 +22,8 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query("SELECT g FROM Group g WHERE g.userId.id = :userId")
     List<Group> findAllGroupByUserId(@Param("userId") Long userId);
+
+    Optional<Object> findByName(String name);
 
 //    Group findGroupByStudentId(Student student);
 

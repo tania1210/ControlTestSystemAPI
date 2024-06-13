@@ -2,6 +2,7 @@ package com.app.service.authentication;
 
 import java.util.Optional;
 
+import exceptions.InvalidPasswordException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +27,18 @@ public class RegistrationService {
 		this.userRepository = userRepository;
 	}
 	
-	public ResponseEntity<String> registration(String firstName, String lastName, String surName, String email, String password) throws UserAlreadyExistsException{
+	public User registration(String firstName, String lastName, String surName, String email, String password) throws UserAlreadyExistsException, InvalidPasswordException{
 		Optional<User> existingUser = userRepository.findByEmail(email);
 		if(existingUser.isPresent()) {
 			throw new UserAlreadyExistsException();
+		}if(password.length() < 8) {
+			throw new InvalidPasswordException();
 		}
 		
 		String hashedPassword = passwordEncoder.bCryptPasswordEncoder().encode(password);
 		User user = new User(firstName, lastName, surName, email, hashedPassword, Role.USER, false, true);
 		registrationRepository.save(user);
-		return ResponseEntity.ok().body("User is registered");		
+		return user;
 	    
 	}
 

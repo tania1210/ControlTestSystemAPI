@@ -35,6 +35,10 @@ public class Subject {
         return name;
     }
 
+    public void setUserId(User user) {
+        this.userId = user;
+    }
+
     public User getUserId() {
         return userId;
     }

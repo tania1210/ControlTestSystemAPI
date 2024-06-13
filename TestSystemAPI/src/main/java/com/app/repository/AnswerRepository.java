@@ -9,11 +9,12 @@ import com.app.model.Answer;
 import com.app.model.Question;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer, Long>{
 	Answer getById(Long id);
-	
+	Optional<Answer> findByAnswerText(String text);
 	Answer save(Answer answer);
 	
 	void deleteById(Long id);
@@ -22,5 +23,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long>{
 
 	@Query("SELECT a FROM Answer a WHERE a.questionId.id = :questionId")
 	List<Answer> findAllByQuestionId(@Param("questionId") Long questionId);
+
 
 }

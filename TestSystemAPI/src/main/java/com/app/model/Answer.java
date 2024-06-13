@@ -35,6 +35,10 @@ public class Answer {
 	public Long getId() {
 		return id;
 	}
+
+	public String getAnswerText() {
+		return answerText;
+	}
 	
 	public void setAnswerText(String answerText) {
 		this.answerText = answerText;
@@ -51,6 +55,11 @@ public class Answer {
 	public void setQuestion(Question questionId) {
 		this.questionId = questionId;
 	}
+
+	public Question getQuestionId() {
+		return questionId;
+	}
+
 	
 	
 	

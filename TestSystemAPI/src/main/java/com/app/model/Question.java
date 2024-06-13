@@ -35,20 +35,32 @@ public class Question {
 		this.typeId = typeId;
 		this.testId = testId;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
-	
+
+	public String getQuestionText() {
+		return questionText;
+	}
+
 	public void setQuestionText(String questionText) {
 		this.questionText = questionText;
 	}
-	
-	public void setType(TypeOfQuestion typeId) {
+
+	public TypeOfQuestion getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(TypeOfQuestion typeId) {
 		this.typeId = typeId;
 	}
-	
-	public void setTest(Test testId) {
+
+	public Test getTestId() {
+		return testId;
+	}
+
+	public void setTestId(Test testId) {
 		this.testId = testId;
 	}
 

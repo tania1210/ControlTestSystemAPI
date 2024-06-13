@@ -2,9 +2,11 @@ package com.app.service.testing;
 
 import java.sql.Time;
 import java.util.List;
+import java.util.Optional;
 
 import com.app.model.*;
 import com.app.repository.*;
+import exceptions.TestAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -38,18 +40,22 @@ public class TestService {
 	    return timeString.matches(timePattern);
 	}
 
-	public Long createNewTest(String name, String duraction, byte attempts, byte fullScore) throws InvalidFormatException{
-		if(!isValidTimeFormat(duraction)) {
+	public Test createNewTest(String name, String duraction, byte attempts, byte fullScore) throws TestAlreadyExistsException, InvalidFormatException{
+		Optional<Test> existingTest = testRepository.findByName(name);
+		if(existingTest.isPresent()) {
+			throw new TestAlreadyExistsException("test already exists with this name");
+		}if(!isValidTimeFormat(duraction)) {
 			throw new InvalidFormatException(null, duraction, fullScore, null);
 		}else {
 			Test test = testRepository.saveAndFlush(new Test(name, Time.valueOf(duraction), attempts, fullScore));		
-			return test.getId();
+			return test;
 		}
 	}
 
-	public void setTestDatas(Long id, String name, String duraction, byte fullScore, byte attempts) throws InvalidFormatException, NullPointerException{
-		if(id == null) {
-			throw new NullPointerException();
+	public void setTestDatas(Long id, String name, String duraction, byte fullScore, byte attempts) throws InvalidFormatException, EntityNotFoundException{
+		Optional<Test> existingTest = testRepository.findById(id);
+		if(!existingTest.isPresent()) {
+			throw new EntityNotFoundException("test not found. No data's been changed");
 		}else {
 			Test test = testRepository.getById(id);
 			if(name != null) {
@@ -62,32 +68,42 @@ public class TestService {
 				}
 			}if(attempts != 0) {
 				test.setAttemps(attempts);
-			}else {
-
 			}
 			testRepository.save(test);
 		}
 	}
 
 	public void deleteTest(Long id) throws EntityNotFoundException{
-		Test test = testRepository.getById(id);
-		List<Question> questions = questionRepository.findByTestId(test);
+		Optional<Test> existingTest = testRepository.findById(id);
+		if(!existingTest.isPresent()) {
+			throw new EntityNotFoundException("Test not found. Wrong id");
+		}else {
+			List<Question> questions = questionRepository.findByTestId(existingTest.get());
 
-		for(Question question: questions) {
+			for(Question question: questions) {
 
-			List<Answer> answers = answerRepository.findByQuestionId(question);
-			for(Answer answer: answers) {
-				answerRepository.deleteById(answer.getId());
+				List<Answer> answers = answerRepository.findByQuestionId(question);
+				for(Answer answer: answers) {
+					answerRepository.deleteById(answer.getId());
+				}
+				questionRepository.deleteById(question.getId());
 			}
-			questionRepository.deleteById(question.getId());
+			testRepository.deleteById(id);
 		}
-		testRepository.deleteById(id);
+
 	}
 
-	public List<Test> fetchTest(Long id) {
-		Student student = studentRepository.findStudentByUserId(id);
-
-		return testRepository.findAllTestsByStudentId(student.getId());
+	public List<Test> fetchTest(Long id) throws EntityNotFoundException {
+		Optional<Student> existingStudent = studentRepository.findStudentByUserId(id);
+		if(!existingStudent.isPresent()) {
+			throw new EntityNotFoundException("Student not found. Wrong id");
+		}else {
+			List<Test> tests = testRepository.findAllTestsByStudentId(existingStudent.get().getId());
+			if(tests.isEmpty()) {
+				throw new EntityNotFoundException("no test's been found");
+			}
+			return tests;
+		}
 	}
 	
 	

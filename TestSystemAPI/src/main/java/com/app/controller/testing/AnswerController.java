@@ -2,6 +2,7 @@ package com.app.controller.testing;
 
 import com.app.model.Answer;
 import com.app.service.testing.AnswerService;
+import exceptions.AnswerAlreadyExistsException;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -25,37 +26,43 @@ public class AnswerController {
                                               @Parameter(description = "status of the answer") @RequestParam boolean isCorrect,
                                               @Parameter(description = "id of the question") @RequestParam Long questionId) {
         try {
-            Long id = answerService.createNewAnswer(text, isCorrect, questionId);
-            return ResponseEntity.ok(id);
+            return ResponseEntity.ok().body(answerService.createNewAnswer(text, isCorrect, questionId));
+        }catch (AnswerAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }catch(EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("question not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @PatchMapping
-    public ResponseEntity<String> setAnswer(@Parameter(description = "id of the answer") @RequestParam Long id,
+    public ResponseEntity<?> setAnswer(@Parameter(description = "id of the answer") @RequestParam Long id,
                                             @Parameter(description = "text of the answer") @RequestParam String answerText,
-                                            @Parameter(description = "status of the answer") @RequestParam boolean isCorrect) {
+                                            @Parameter(description = "status of the answer") @RequestParam boolean isCorrect,
+                                            @Parameter(description = "question id of the answer") @RequestParam Long questionId) {
         try {
-            answerService.setAnswerDatas(id, answerText, isCorrect);
-            return ResponseEntity.ok("Answer datas was update");
-        }catch(NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("any data was change. Answer wasn't found");
+            return ResponseEntity.ok().body(answerService.setAnswerDatas(id, answerText, isCorrect, questionId));
+        }catch(EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteAnswer(@Parameter(description = "id of the answer") @RequestParam Long id) {
+    public ResponseEntity<?> deleteAnswer(@Parameter(description = "id of the answer") @RequestParam Long id) {
         try {
             answerService.deleteAnswer(id);
-            return ResponseEntity.ok("Answer was delete");
+            return ResponseEntity.ok("Answer deleted");
         }catch(EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Answer wasn`t found. Wrong id");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping
-    public List<Answer> fetchAnswers(@Parameter(description = "id of the question") @RequestParam Long id) {
-        return answerService.fetchAnswers(id);
+    public ResponseEntity<?> fetchAnswers(@Parameter(description = "id of the question") @RequestParam Long id) {
+        try {
+            return ResponseEntity.ok().body(answerService.fetchAnswers(id));
+        }catch(EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
     }
 }

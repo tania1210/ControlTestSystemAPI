@@ -1,6 +1,7 @@
 package com.app.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.app.model.Subject;
 import com.app.model.Test;
@@ -15,6 +16,8 @@ import com.app.model.Question;
 public interface QuestionRepository extends JpaRepository<Question, Long>{
 	Question save(Question question);
     Question getById(Long id);
+    Optional<Question> findByQuestionText(String questionText);
+    Optional<Question> findById(Long id);
 
     List<Question> findByTestId(Test test);
 

@@ -14,6 +14,9 @@ public interface TestRepository extends JpaRepository<Test, Long>{
 
     Test save(Test test);
     Test getById(Long id);
+//    Test findById(Long id);
+    Optional<Test> findByName(String name);
+    Optional<Test> findById(Long id);
 
     void deleteById(Long id);
 

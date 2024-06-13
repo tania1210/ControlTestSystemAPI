@@ -5,6 +5,7 @@ import com.app.auth.AuthenticationResponse;
 import com.app.auth.RegistrationRequest;
 import com.app.config.JwtService;
 import com.app.security.Role;
+import exceptions.EmailNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.app.model.User;
 import com.app.repository.UserRepository;
+import exceptions.IncorrectPasswordException;
+
 
 @Service
-public class AuthenticationService {
+public class AuthorizationService {
 
 	private  UserRepository userRepository;
 
@@ -23,6 +26,13 @@ public class AuthenticationService {
 	private JwtService jwtService;
 
 	private AuthenticationManager authenticationManager;
+
+	public AuthorizationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
+		this.jwtService = jwtService;
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	public AuthenticationResponse register(RegistrationRequest request) {
 		var user = new User.Builder()
@@ -40,15 +50,26 @@ public class AuthenticationService {
 				.build();
 	}
 
-	public AuthenticationResponse authenticate(AuthenticationRequest request) {
-		authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(
-						request.getEmail(),
-						request.getPassword()
-				)
+	public AuthenticationResponse authenticate(AuthenticationRequest request) throws EmailNotFoundException, IncorrectPasswordException{
+		System.out.println("Authenticating user with email: {}" + request.getEmail());
+		var user = userRepository.findByEmail(request.getEmail())
+				.orElseThrow(() -> new EmailNotFoundException("Email not found: " + request.getEmail()));
+
+		var authResult = authenticationManager.authenticate(
+			new UsernamePasswordAuthenticationToken(
+				request.getEmail(),
+				request.getPassword()
+			)
 		);
-		var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-		return null;
+		System.out.println("Authentication successful for user with email: {}" + request.getEmail());
+
+
+
+		var jwtToken = jwtService.generateToken(user);
+		return new AuthenticationResponse.Builder()
+				.token(jwtToken)
+				.build();
+
 	}
 
 
