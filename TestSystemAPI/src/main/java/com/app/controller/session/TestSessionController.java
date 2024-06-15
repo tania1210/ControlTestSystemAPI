@@ -2,6 +2,7 @@ package com.app.controller.session;
 
 import com.app.model.Test;
 import com.app.service.session.TestSessionService;
+import exceptions.StudentAnswerAlreadyExistsException;
 import exceptions.TestDeactivatedException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class TestSessionController {
 
 		try {
 			testSessionService.startTestSession(attempts, userId, testId);
-			return ResponseEntity.ok("");
+			return ResponseEntity.ok("session was starting");
 		}catch (EntityNotFoundException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}catch (TestDeactivatedException e) {
@@ -33,11 +34,28 @@ public class TestSessionController {
 		}
 	}
 
-//	@PostMapping("/add-response")
-//	public ResponseEntity<?> addResponseToSession(Long sessionId, Long questionId, String response) {
-//		testSessionService.addResponseToSession(sessionId, questionId, response);
-//		return ResponseEntity.ok().build();
-//	}
+	@PostMapping
+	public ResponseEntity<?> addResponseToSession(Long testId, Long questionId, Long answerId, Long studentId) {
+		try {
+			testSessionService.addResponse(testId, questionId, answerId, studentId);
+			return ResponseEntity.status(HttpStatus.CREATED).body("answer was saving");
+		}catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}catch (StudentAnswerAlreadyExistsException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+		}
+	}
+
+	@PatchMapping
+	public ResponseEntity<?> setResponse(Long testId, Long questionId, Long answerId, Long studentId) {
+		try {
+			testSessionService.setResponse(testId, questionId, answerId, studentId);
+			return ResponseEntity.ok("answer was set");
+		}catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+
+	}
 //
 //	@PostMapping("/complete")
 //	public ResponseEntity<?> completeTestSession(Long sessionId) {

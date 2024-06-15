@@ -20,8 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/tests")
-@PreAuthorize("hasRole('USER')")
-//@PreAuthorize("hasAnyAuthority('TEACHER', 'ADMIN')")
+@PreAuthorize("hasAnyAuthority('TEACHER', 'ADMIN')")
 public class TestController {
 	
 		private TestService testService;
@@ -31,14 +30,13 @@ public class TestController {
 		}
 
 
-		@Operation(summary = "створити новий тест", description = "повертає створений обʼєкт тесту")
+		@Operation(summary = "створити новий тест", description = "повертає створений тест")
 		@ApiResponses(value = {
 				@ApiResponse(responseCode = "201", description = "тест успішно створено"),
 				@ApiResponse(responseCode = "409", description = "тест із такою назвою уже існує"),
 				@ApiResponse(responseCode = "422", description = "некоректний тип тривалості тесту"),
 		})
 		@PostMapping
-//		@PreAuthorize("hasAuthority('ADMIN')")
 		public ResponseEntity<?> createNewTest(@Parameter(description = "Name of the test") @RequestParam String name,
 											   @Parameter(description = "Duration of the test") @RequestParam String duration,
 											   @Parameter(description = "Full score of the test") @RequestParam byte fullScore,
@@ -52,6 +50,12 @@ public class TestController {
 			}
 		}
 
+		@Operation(summary = "оновити дані тесту", description = "повертає оновлений тест")
+		@ApiResponses(value = {
+				@ApiResponse(responseCode = "200", description = "тест успішно оновлено"),
+				@ApiResponse(responseCode = "404", description = "тест не знайдено"),
+				@ApiResponse(responseCode = "422", description = "некоректний тип тривалості тесту"),
+		})
 		@PatchMapping
 		public ResponseEntity<String> setTest(@Parameter(description = "id of the test") @RequestParam Long id,
 											  @Parameter(description = "Name of the test") @RequestParam String name,
@@ -68,8 +72,12 @@ public class TestController {
 			}
 		}
 
+		@Operation(summary = "видалити тест", description = "видаляє тест за id")
+		@ApiResponses(value = {
+				@ApiResponse(responseCode = "200", description = "тест успішно видалено"),
+				@ApiResponse(responseCode = "404", description = "тест не знайдено")
+		})
 		@DeleteMapping
-		@PreAuthorize("hasAuthority('ADMIN')")
 		public ResponseEntity<?> deleteTest(@Parameter(description = "id of the test") @RequestParam Long id) {
 			try {
 				testService.deleteTest(id);
@@ -79,8 +87,13 @@ public class TestController {
 			}
 		}
 
+
+		@Operation(summary = "отримати список тестів для користувача", description = "повертає список тестів для конкретного користувача")
+		@ApiResponses(value = {
+				@ApiResponse(responseCode = "200", description = "тести знайдено та повернуто"),
+				@ApiResponse(responseCode = "404", description = "користувача не знайдено")
+		})
 		@GetMapping
-		@PreAuthorize("hasRole('USER')")
 		public ResponseEntity<?> fetchTest(@Parameter(description = "id of the user") @RequestParam Long id) {
 
 			try {

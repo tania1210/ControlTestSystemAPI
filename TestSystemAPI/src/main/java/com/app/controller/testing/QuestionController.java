@@ -3,7 +3,10 @@ package com.app.controller.testing;
 import com.app.model.Question;
 import com.app.service.testing.QuestionService;
 import exceptions.QuestionAlreadyExistsException;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,11 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
+    @Operation(summary = "створити питання", description = "повертає створене питання")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "питання створено"),
+            @ApiResponse(responseCode = "404", description = "користувача не знайдено")
+    })
     @PostMapping
     public ResponseEntity<?> createNewQuestion(@Parameter(description = "text of the question") @RequestParam String text,
                                                @Parameter(description = "Type id of the question") @RequestParam Long typeId,

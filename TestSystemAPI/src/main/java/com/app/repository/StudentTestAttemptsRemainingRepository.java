@@ -11,6 +11,6 @@ import java.util.Optional;
 
 public interface StudentTestAttemptsRemainingRepository extends JpaRepository<StudentTestAttemptsRemaining, Long> {
 
-    @Query("SELECT sta FROM StudentTestAttempts sta WHERE sta.testId.id = :testId AND sta.studentId.id = :studentId")
+    @Query("SELECT sta FROM StudentTestAttemptsRemaining sta WHERE sta.testId.id = :testId AND sta.studentId.id = :studentId")
     Optional<StudentTestAttemptsRemaining> findByTestIdAndStudentId(@Param("testId") Long testId, @Param("studentId") Long studentId);
 }
