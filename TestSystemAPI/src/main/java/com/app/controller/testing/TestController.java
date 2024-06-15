@@ -2,7 +2,10 @@ package com.app.controller.testing;
 
 import com.app.model.Test;
 import exceptions.TestAlreadyExistsException;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/tests")
+@PreAuthorize("hasRole('USER')")
 //@PreAuthorize("hasAnyAuthority('TEACHER', 'ADMIN')")
 public class TestController {
 	
@@ -26,6 +30,13 @@ public class TestController {
 			this.testService = testService;
 		}
 
+
+		@Operation(summary = "створити новий тест", description = "повертає створений обʼєкт тесту")
+		@ApiResponses(value = {
+				@ApiResponse(responseCode = "201", description = "тест успішно створено"),
+				@ApiResponse(responseCode = "409", description = "тест із такою назвою уже існує"),
+				@ApiResponse(responseCode = "422", description = "некоректний тип тривалості тесту"),
+		})
 		@PostMapping
 //		@PreAuthorize("hasAuthority('ADMIN')")
 		public ResponseEntity<?> createNewTest(@Parameter(description = "Name of the test") @RequestParam String name,
@@ -58,6 +69,7 @@ public class TestController {
 		}
 
 		@DeleteMapping
+		@PreAuthorize("hasAuthority('ADMIN')")
 		public ResponseEntity<?> deleteTest(@Parameter(description = "id of the test") @RequestParam Long id) {
 			try {
 				testService.deleteTest(id);
@@ -68,6 +80,7 @@ public class TestController {
 		}
 
 		@GetMapping
+		@PreAuthorize("hasRole('USER')")
 		public ResponseEntity<?> fetchTest(@Parameter(description = "id of the user") @RequestParam Long id) {
 
 			try {

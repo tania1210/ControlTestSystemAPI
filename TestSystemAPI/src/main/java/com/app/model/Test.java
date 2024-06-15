@@ -88,6 +88,14 @@ public class Test {
 	public void setAttemps(byte attempts) {
 		this.attempts = attempts;
 	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public boolean getActivate() {
+		return isActive;
+	}
 	
 	
 	

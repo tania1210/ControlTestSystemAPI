@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "\"test_session\"")
-public class TestSession {
+@Table(name = "\"test_activation\"")
+public class TestActivation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,46 +19,34 @@ public class TestSession {
     @JoinColumn(name = "test_id", referencedColumnName = "id")
     private Test testId;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
-    private Student studentId;
-
-    public TestSession(LocalDateTime startTime, LocalDateTime endTime, Test testId, Student studentId) {
+    public TestActivation(LocalDateTime startTime, LocalDateTime endTime, Test testId) {
         this.startTime = startTime;
-        this.endTime =  endTime;
+        this.endTime = endTime;
         this.testId = testId;
-        this.studentId = studentId;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
     }
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
-    public Test getTestId() {
-        return testId;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
     public void setTestId(Test testId) {
         this.testId = testId;
     }
 
-    public Student getStudentId() {
-        return studentId;
+    public Test getTestId() {
+        return testId;
     }
 
-    public void setStudentId(Student studentId) {
-        this.studentId = studentId;
-    }
 }

@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         System.out.println("Processing request to URI: {}" + request.getRequestURI());
 
-        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,null, userDetails.getAuthorities());
+                        userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
@@ -61,45 +61,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
-
-//    @Autowired
-//    private JwtTokenProvider tokenProvider;
-//
-//    @Autowired
-//    @Qualifier("userService")
-//    private UserDetailsService userDetailsService;
-//
-//    @Override
-//    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
-//            throws ServletException, IOException {
-//
-//        String jwt = getJWTfromRequest(request);
-//
-//        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-//            String username = tokenProvider.getUsernameFromJWT(jwt);
-//            String role = tokenProvider.getRoleFromJWT(jwt);
-//
-//            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-//                    userDetails, null, List.of(new SimpleGrantedAuthority(role)));
-//            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//
-//            // Логування
-//            System.out.println("JWT: " + jwt);
-//            System.out.println("Username: " + username);
-//            System.out.println("Role: " + role);
-//
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//        }
-//        chain.doFilter(request, response);
-//    }
-//
-//    private String getJWTfromRequest(HttpServletRequest request) {
-//        String bearerToken = request.getHeader("Authorization");
-//        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-//            return bearerToken.substring(7);
-//        }
-//        return null;
-//    }
 }
-

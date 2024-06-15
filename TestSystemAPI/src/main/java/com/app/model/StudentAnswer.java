@@ -11,6 +11,10 @@ public class StudentAnswer {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "test_id", referencedColumnName = "id")
+    private Test testId;
+
+    @ManyToOne
     @JoinColumn(name = "answer_id", referencedColumnName = "id")
     private Answer answerId;
 
@@ -20,7 +24,8 @@ public class StudentAnswer {
 
     public StudentAnswer() {}
 
-    public StudentAnswer(Answer answerId, Student studentId) {
+    public StudentAnswer(Test testId, Answer answerId, Student studentId) {
+        this.testId = testId;
         this.answerId = answerId;
         this.studentId = studentId;
     }
@@ -29,11 +34,27 @@ public class StudentAnswer {
         return id;
     }
 
+    public void setAnswerId(Answer answerId) {
+        this.answerId = answerId;
+    }
+
     public Answer getAnswerId(){
         return answerId;
     }
 
+    public void setStudentId(Student studentId) {
+        this.studentId = studentId;
+    }
+
     public Student getStudentId() {
         return studentId;
+    }
+
+    public Test getTestId() {
+        return testId;
+    }
+
+    public void setTestId(Test testId) {
+        this.testId = testId;
     }
 }

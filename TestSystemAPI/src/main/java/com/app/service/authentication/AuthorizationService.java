@@ -19,13 +19,10 @@ import exceptions.IncorrectPasswordException;
 @Service
 public class AuthorizationService {
 
-	private  UserRepository userRepository;
-
-	private PasswordEncoder passwordEncoder;
-
-	private JwtService jwtService;
-
-	private AuthenticationManager authenticationManager;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final JwtService jwtService;
+	private final AuthenticationManager authenticationManager;
 
 	public AuthorizationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
@@ -45,56 +42,31 @@ public class AuthorizationService {
 		userRepository.save(user);
 
 		var jwtToken = jwtService.generateToken(user);
-		return new AuthenticationResponse.Builder()
-				.token(jwtToken)
-				.build();
+		return new AuthenticationResponse(jwtToken);
 	}
 
-	public AuthenticationResponse authenticate(AuthenticationRequest request) throws EmailNotFoundException, IncorrectPasswordException{
-		System.out.println("Authenticating user with email: {}" + request.getEmail());
+	public AuthenticationResponse authenticate(AuthenticationRequest request) throws EmailNotFoundException, IncorrectPasswordException {
+		System.out.println("Authenticating user with email: " + request.getEmail());
+// Отримання користувача з бази даних
 		var user = userRepository.findByEmail(request.getEmail())
 				.orElseThrow(() -> new EmailNotFoundException("Email not found: " + request.getEmail()));
 
+// Перевірка пароля
+		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+			throw new IncorrectPasswordException("Incorrect password for user: " + request.getEmail());
+		}
+
+		System.out.println("Attempting authentication...");
 		var authResult = authenticationManager.authenticate(
-			new UsernamePasswordAuthenticationToken(
-				request.getEmail(),
-				request.getPassword()
-			)
+				new UsernamePasswordAuthenticationToken(
+						request.getEmail(),
+						request.getPassword()
+				)
 		);
-		System.out.println("Authentication successful for user with email: {}" + request.getEmail());
-
-
+		System.out.println("Authentication successful for user with email: " + request.getEmail());
 
 		var jwtToken = jwtService.generateToken(user);
-		return new AuthenticationResponse.Builder()
-				.token(jwtToken)
-				.build();
-
+		return new AuthenticationResponse(jwtToken);
 	}
 
-
-//	private UserRepository userRepository;
-//	private final PasswordEncoder passwordEncoder;
-//
-//	public AuthenticationService(UserRepository userRepository) {
-//		this.passwordEncoder = new PasswordEncoder();
-//		this.userRepository = userRepository;
-//	}
-//
-//	public ResponseEntity<String> login(String email, String password) throws UserNotFoundException, IncorrectPasswordException{
-//		Optional<User> registeredUser = userRepository.findByEmail(email);
-//		if(!registeredUser.isPresent()) {
-//			throw new UserNotFoundException();
-//		}
-//
-//		String haschedPasswordFromBD = registeredUser.get().getPassword();
-//		if(passwordEncoder.bCryptPasswordEncoder().matches(password, haschedPasswordFromBD)) {
-//				return ResponseEntity.ok("user is authenticated");
-//			}else {
-//				throw new IncorrectPasswordException();
-//		}
-//
-//	}
-	
-	
 }

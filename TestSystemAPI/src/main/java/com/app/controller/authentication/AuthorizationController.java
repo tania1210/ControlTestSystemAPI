@@ -20,51 +20,20 @@ import lombok.AllArgsConstructor;
 public class AuthorizationController {
 
 	private AuthorizationService service;
-
-	@PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> auth(@RequestBody AuthenticationRequest request) {
-		System.out.println("Received login request for email: " + request.getEmail());
+//(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping
+	public ResponseEntity<?> auth(@RequestParam String email,
+								  @RequestParam String password) {
+		System.out.println("Received login request for email: " + email);
 		try {
-			AuthenticationResponse response = service.authenticate(request);
-			System.out.println("Login successful for email: " + request.getEmail());
+			AuthenticationResponse response = service.authenticate(new AuthenticationRequest(email, password));
+			System.out.println("Login successful for email: " + email);
 			return ResponseEntity.ok(response);
 		} catch (EmailNotFoundException e) {
-			System.out.println("Login failed for email: " + request.getEmail() + " " + e.getMessage());
+			System.out.println("Login failed for email: " + email + " " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}catch (AuthenticationException e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+		} catch (AuthenticationException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 		}
 	}
-
-//	@PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<AuthenticationResponse> auth(@Parameter(description = "email of the user") @RequestBody String email,
-//													   @Parameter(description = "password of the user") @RequestBody String password) {
-//
-////		return ResponseEntity.ok(service.authenticate(new AuthenticationRequest(email, password)));
-//
-//		System.out.println("Received login request for email: {}" + email);
-//		try {
-//			AuthenticationResponse response = service.authenticate(new AuthenticationRequest(email, password));
-//			System.out.println("Login successful for email: {}" + email);
-//			return ResponseEntity.ok(response);
-//		} catch (Exception e) {
-//			System.out.println("Login failed for email: {}" + email + e);
-//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//		}
-//	}
-
-
-//	@PostMapping("login")
-//	public ResponseEntity<String> authentication(@RequestParam("email") String email, @RequestParam("password") String password) {
-//		ResponseEntity<String> message = null;
-//		try {
-//			message = authenticationService.login(email, password);
-//		}catch(UserNotFoundException e) {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-//		}catch(IncorrectPasswordException e) {
-//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
-//		}
-//
-//		return message;
-//	}
 }
