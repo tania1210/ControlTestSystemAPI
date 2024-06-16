@@ -10,7 +10,7 @@ public class TestResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private byte score;
+    private double score;
 
     @ManyToOne
     @JoinColumn(name = "test_id", referencedColumnName = "id")
@@ -22,7 +22,7 @@ public class TestResult {
 
     public TestResult() {}
 
-    public TestResult(byte score, Test testId, Student studentId) {
+    public TestResult(double score, Test testId, Student studentId) {
         this.score = score;
         this.testId = testId;
         this.studentId = studentId;
@@ -32,11 +32,11 @@ public class TestResult {
         return id;
     }
 
-    public void setScore(byte score) {
+    public void setScore(double score) {
         this.score = score;
     }
 
-    public byte getScore(){
+    public double getScore(){
         return score;
     }
 

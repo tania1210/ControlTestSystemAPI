@@ -34,28 +34,7 @@ public class TestSessionController {
 		}
 	}
 
-	@PostMapping
-	public ResponseEntity<?> addResponseToSession(Long testId, Long questionId, Long answerId, Long studentId) {
-		try {
-			testSessionService.addResponse(testId, questionId, answerId, studentId);
-			return ResponseEntity.status(HttpStatus.CREATED).body("answer was saving");
-		}catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}catch (StudentAnswerAlreadyExistsException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		}
-	}
 
-	@PatchMapping
-	public ResponseEntity<?> setResponse(Long testId, Long questionId, Long answerId, Long studentId) {
-		try {
-			testSessionService.setResponse(testId, questionId, answerId, studentId);
-			return ResponseEntity.ok("answer was set");
-		}catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
-
-	}
 //
 //	@PostMapping("/complete")
 //	public ResponseEntity<?> completeTestSession(Long sessionId) {

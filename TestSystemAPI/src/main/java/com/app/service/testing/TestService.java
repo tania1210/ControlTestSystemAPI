@@ -19,18 +19,12 @@ public class TestService {
 	private TestRepository testRepository;
 	private QuestionRepository questionRepository;
 	private AnswerRepository answerRepository;
-//	private GroupRepository groupRepository;
-//	private SubjectRepository subjectRepository;
 	private StudentRepository studentRepository;
 
-	public TestService (TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository,
-						GroupRepository groupRepository, SubjectRepository subjectRepository, StudentRepository studentRepository
-	) {
+	public TestService (TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, StudentRepository studentRepository ) {
 		this.testRepository = testRepository;
 		this.questionRepository = questionRepository;
 		this.answerRepository = answerRepository;
-//		this.groupRepository = groupRepository;
-//		this.subjectRepository = subjectRepository;
 		this.studentRepository = studentRepository;
 	}
 	
