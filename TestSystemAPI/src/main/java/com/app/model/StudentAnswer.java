@@ -26,6 +26,8 @@ public class StudentAnswer {
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student studentId;
 
+    public StudentAnswer() {}
+
     public StudentAnswer(Test testId, Question questionId, Answer answerId, Student studentId) {
         this.testId = testId;
         this.questionId = questionId;

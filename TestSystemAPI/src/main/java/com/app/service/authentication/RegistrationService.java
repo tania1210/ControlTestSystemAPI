@@ -26,7 +26,8 @@ public class RegistrationService {
 		this.registrationRepository = registrationRepository;
 		this.userRepository = userRepository;
 	}
-	
+
+
 	public User registration(String firstName, String lastName, String surName, String email, String password) throws UserAlreadyExistsException, InvalidPasswordException{
 		Optional<User> existingUser = userRepository.findByEmail(email);
 		if(existingUser.isPresent()) {

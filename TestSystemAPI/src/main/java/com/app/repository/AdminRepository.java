@@ -10,11 +10,10 @@ import com.app.model.User;
 
 @Repository
 public interface AdminRepository extends JpaRepository<User, Long>{
-	Optional<User> findById(Long id);
-	
-	
+
 	List<User> findAll();
 	
 	User save(User user);
 	void delete(User user);
+
 }

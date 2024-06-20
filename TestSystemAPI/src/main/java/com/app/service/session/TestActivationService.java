@@ -22,14 +22,14 @@ public class TestActivationService {
         this.testRepository = testRepository;
     }
 
-    public void activateTest(LocalDateTime startTime, LocalDateTime endTime, Long testId) {
+    public void activateTest(LocalDateTime endTime, Long testId) {
         Optional<Test> test = testRepository.findById(testId);
         if(test.isEmpty()) {
             throw new EntityNotFoundException(String.format("test has not found with id :%testId", testId));
         }else {
             test.get().setActive(true);
             testRepository.save(test.get());
-            testActivationRepository.save(new TestActivation(startTime, endTime, test.get()));
+            testActivationRepository.save(new TestActivation(LocalDateTime.now(), endTime, test.get()));
         }
     }
 

@@ -35,8 +35,9 @@ public class SecurityConfig {
 				.csrf(csrf -> csrf.disable()) // Налаштування CSRF через Customizer
 				.authorizeHttpRequests(auth -> auth // Використання authorizeHttpRequests для нових версій
 						.requestMatchers("/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll() // Дозволяємо доступ до Swagger
-						.requestMatchers("/api/v1/login").permitAll() // Дозволяємо доступ до логіну
-						.requestMatchers("/api/v1/signUp").permitAll() // Дозволяємо доступ до реєстрації
+//						.requestMatchers("/api/v1/login").permitAll() // Дозволяємо доступ до логіну
+//						.requestMatchers("/api/v1/signUp").permitAll() // Дозволяємо доступ до реєстрації
+						.requestMatchers("/**").permitAll()
 						.anyRequest().authenticated()) // Всі інші запити потребують аутентифікації
 				.sessionManagement(session -> session
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Використання Customizer для налаштування SessionManagement

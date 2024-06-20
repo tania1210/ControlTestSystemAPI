@@ -1,10 +1,13 @@
 package com.app.service.authentication;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.app.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.app.dto.UserDTO;
@@ -17,9 +20,11 @@ import com.app.security.Role;
 public class AdminService {
 	
 	private AdminRepository adminRepository;
+	private UserRepository userRepository;
 	
-	public AdminService(AdminRepository adminRepository) {
+	public AdminService(AdminRepository adminRepository, UserRepository userRepository) {
 		this.adminRepository = adminRepository;
+		this.userRepository = userRepository;
 	}
 	
     private UserDTO convertToDTO(User user) {
@@ -44,24 +49,22 @@ public class AdminService {
 		 List<User> users = adminRepository.findAll();
 		return users.stream().map(this::convertToDTO).collect(Collectors.toList());
 	}
-	
-//main mathod for @PutMapping - undate datas
-	public void updateUser(Long id, Map<String, Object> updateData) {
-		User existingUser = userIsPresent(id).orElse(null);
 
-		if(existingUser == null) {
-			
-			throw new IllegalArgumentException("user has not found");
+	public void updateUserRole(Long id, String role) throws IllegalArgumentException, EntityNotFoundException{
+		Optional<User> user = userRepository.findById(id);
+
+		if(user.isEmpty()) {
+			throw new EntityNotFoundException("user hasn't found");
 		}else {
-			updateData.forEach((key, value) -> {
-		            switch (key) {
-		                case "role":
-		                	if(value instanceof Role) {
-		                		existingUser.setRole((Role)value);
-		                	}         
-		                    break;
-		            }
-		        });
+			boolean isValidRole = Arrays.stream(Role.values())
+					.anyMatch(r -> r.name().equalsIgnoreCase(role));
+
+			if (!isValidRole) {
+				throw new IllegalArgumentException("Invalid role: " + role);
+			}
+			Role newRole = Role.valueOf(role.toUpperCase());
+			user.get().setRole(newRole);
+			userRepository.save(user.get());
 		}
 	}
 	
@@ -71,13 +74,12 @@ public class AdminService {
 	}
 	
 //main method of @deleteMapping - delete user
-	public void deleteUser(Long id) throws IllegalArgumentException{
-		User existingUser = userIsPresent(id).orElse(null);
-		
-		if(existingUser == null) {
-			throw new IllegalArgumentException("user has not found");
+	public void deleteUser(Long id) throws EntityNotFoundException{
+		Optional<User> user = userRepository.findById(id);
+		if(user.isEmpty()) {
+			throw new EntityNotFoundException("user hasn't found");
 		}else {
-			adminRepository.delete(existingUser);
+			userRepository.delete(user.get());
 		}
 	}
 	

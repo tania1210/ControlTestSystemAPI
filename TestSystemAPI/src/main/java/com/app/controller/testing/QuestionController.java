@@ -27,7 +27,8 @@ public class QuestionController {
     @Operation(summary = "створити питання", description = "повертає створене питання")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "питання створено"),
-            @ApiResponse(responseCode = "404", description = "користувача не знайдено")
+            @ApiResponse(responseCode = "404", description = "користувача не знайдено"),
+            @ApiResponse(responseCode = "409", description = "дане питання уже існує в цьому тестів")
     })
     @PostMapping
     public ResponseEntity<?> createNewQuestion(@Parameter(description = "text of the question") @RequestParam String text,
@@ -37,13 +38,16 @@ public class QuestionController {
             return ResponseEntity.status(HttpStatus.CREATED).body(questionService.createNewQuestion(text, typeId, testId));
         }catch (QuestionAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }catch(IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }catch(EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
+    @Operation(summary = "створити відповідь", description = "повертає збережену відповідь")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "відповідь успішно створено"),
+            @ApiResponse(responseCode = "404", description = "питання не знайдено")
+    })
     @PatchMapping
     public ResponseEntity<?> setQuestion(@Parameter(description = "id of the question") @RequestParam Long id,
                                               @Parameter(description = "text of the question") @RequestParam String text,

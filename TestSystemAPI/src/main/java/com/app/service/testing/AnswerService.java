@@ -46,8 +46,10 @@ public class AnswerService {
                 throw new EntityNotFoundException("new question's not found. Wrong id");
             }else {
                 Answer answer = answerRepository.getById(id);
-                if(!answerText.equals(answer.getAnswerText())) {
-                    answer.setAnswerText(answerText);
+                if(answerText != null) {
+                    if(!answerText.equals(answer.getAnswerText())) {
+                        answer.setAnswerText(answerText);
+                    }
                 }if(isCorrect != answer.getIsCorrect()) {
                     answer.setIsCorrect(isCorrect);
                 }if(questionId != answer.getQuestionId().getId()) {

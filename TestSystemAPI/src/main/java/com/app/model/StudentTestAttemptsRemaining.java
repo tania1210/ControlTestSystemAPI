@@ -20,6 +20,8 @@ public class StudentTestAttemptsRemaining {
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     Student studentId;
 
+    public StudentTestAttemptsRemaining() {}
+
     public StudentTestAttemptsRemaining(byte studentAttempts, Test testId, Student studentId) {
         this.studentAttempts = studentAttempts;
         this.studentId = studentId;

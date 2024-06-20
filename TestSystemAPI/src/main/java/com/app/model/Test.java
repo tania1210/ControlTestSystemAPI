@@ -36,14 +36,7 @@ public class Test {
 	private Subject subjectId;
 	
 	private byte fullScore;
-	
-//	@Column(columnDefinition = "boolean default false")
-//	private boolean completed;
-	
-//	@ManyToOne
-//	@JoinColumn(name = "created_by_id", referencedColumnName = "id")
-//	private User createdBy;
-	
+
 	public Test() {}
 	
 	public Test(String name, Time duraction, byte attempts, byte fullScore) {

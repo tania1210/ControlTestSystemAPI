@@ -3,6 +3,10 @@ package com.app.controller.authentication;
 import com.app.auth.AuthenticationRequest;
 import com.app.auth.AuthenticationResponse;
 import exceptions.EmailNotFoundException;
+import exceptions.IncorrectPasswordException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.security.core.AuthenticationException;
 
 import org.springframework.http.HttpStatus;
@@ -20,7 +24,12 @@ import lombok.AllArgsConstructor;
 public class AuthorizationController {
 
 	private AuthorizationService service;
-//(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@Operation(summary = "авторизуватись", description = "надає доступ до відповідних ресурсів")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "користувач авторизувався"),
+			@ApiResponse(responseCode = "404", description = "користувача з вказаною поштою не знайдено/не дійсний пароль")
+	})
 	@PostMapping
 	public ResponseEntity<?> auth(@RequestParam String email,
 								  @RequestParam String password) {
@@ -32,8 +41,8 @@ public class AuthorizationController {
 		} catch (EmailNotFoundException e) {
 			System.out.println("Login failed for email: " + email + " " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		} catch (AuthenticationException e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+		} catch (IncorrectPasswordException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
 }

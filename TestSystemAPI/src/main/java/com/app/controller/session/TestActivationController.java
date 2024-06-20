@@ -28,9 +28,9 @@ public class TestActivationController {
             @ApiResponse(responseCode = "404", description = "тест не знайдено")
     })
     @PostMapping
-    public ResponseEntity<?> activateTest(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime, @RequestParam Long testId) {
+    public ResponseEntity<?> activateTest(@RequestParam LocalDateTime endTime, @RequestParam Long testId) {
         try {
-            testActivationService.activateTest(startTime, endTime, testId);
+            testActivationService.activateTest(endTime, testId);
             return ResponseEntity.ok("test activated");
         }catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

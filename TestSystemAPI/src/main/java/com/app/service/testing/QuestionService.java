@@ -31,7 +31,7 @@ public class QuestionService {
         this.answerRepository = answerRepository;
     }
 
-    public Question createNewQuestion(String questionText, Long typeId, Long testId) throws QuestionAlreadyExistsException, IllegalArgumentException, EntityNotFoundException {
+    public Question createNewQuestion(String questionText, Long typeId, Long testId) throws QuestionAlreadyExistsException, EntityNotFoundException {
         Optional<Question> existingQuestion = questionRepository.findByQuestionText(questionText);
         if(existingQuestion.isPresent()) {
            throw new QuestionAlreadyExistsException("this question is already exists");
@@ -40,7 +40,7 @@ public class QuestionService {
             if(!testRepository.findById(testId).isPresent()){
                 throw new EntityNotFoundException("test not found");
             }if(!existingtype.isPresent()) {
-                throw new IllegalArgumentException("this question type not found");
+                throw new EntityNotFoundException("this question type not found");
             }else {
                 Question question = questionRepository.save(new Question(questionText, existingtype.get(), testRepository.getById(testId)));
                 return question;

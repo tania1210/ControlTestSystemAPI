@@ -4,9 +4,11 @@ import com.app.model.*;
 import com.app.repository.*;
 import exceptions.StudentAnswerAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class StudentAnswerService {
 
     private StudentRepository studentRepository;
@@ -29,22 +31,27 @@ public class StudentAnswerService {
         if(student.isEmpty()) {
             throw new EntityNotFoundException(String.format("student hasn't found with id: %d", studentId));
         }else {
+            System.out.println("student is present: " + student.get().getId());
             Optional<Test> test = testRepository.findById(testId);
             if(test.isEmpty()) {
                 throw new EntityNotFoundException(String.format("test hasn't found with id: %d", testId));
             }else {
+                System.out.println("test is present: " + test.get().getId());
                 Optional<Question> question = questionRepository.findById(questionId);
                 if(question.isEmpty()) {
                     throw new EntityNotFoundException(String.format("question hasn't found with id: %d", questionId));
                 }else {
+                    System.out.println("question is present: " + question.get().getId());
                     Optional<Answer> answer = answerRepository.findById(answerId);
                     if(answer.isEmpty()) {
                         throw new EntityNotFoundException(String.format("answer hasn't found with id: %d", answerId));
                     } else {
+                        System.out.println("answer is present: " + answer.get().getId());
                         Optional<StudentAnswer> studentAnswer = studentAnswerRepository.findByTestIdAndQuestionIdAndStudentId(testId, questionId, studentId);
                         if(studentAnswer.isPresent()) {
                             throw new StudentAnswerAlreadyExistsException("");
                         }else {
+                            System.out.println("student answer is save: ");
                             studentAnswerRepository.save(new StudentAnswer(test.get(), question.get(), answer.get(), student.get()));
                         }
                     }
